@@ -1,5 +1,7 @@
 package edu.handong.analysis;
 
+import java.util.ArrayList;
+
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
 
@@ -21,8 +23,8 @@ public class HGUCoursePatternAnalyzer {
 
 	private int numOfStudents;
 	private int numOfCourses;
-	private Student[] students;
-	private Course[] courses;
+	private ArrayList<Student> students;
+	private ArrayList<Course> courses;
 	
 	/**
 	 * This method runs our analysis logic to get the list of student and course names from lines.
@@ -53,9 +55,10 @@ public class HGUCoursePatternAnalyzer {
 	 * @param lines
 	 * @return
 	 */
-	private Student[] initiateStudentArrayFromLines(String[] lines) {
+	/*
+	private ArrayList<Student> initiateStudentArrayFromLines(String[] lines) {
 		
-		Student[] stdnt = new Student[numOfStudents];
+		ArrayList<Student> stdnt = new ArrayList<Student>(numOfStudents);
 		String[] templines = new String[lines.length];
 		
 		for(int i = 0; i < lines.length; i++) {
@@ -64,8 +67,8 @@ public class HGUCoursePatternAnalyzer {
         }
 		
 		for(int i = 0, j = 0; j < numOfStudents; i++) {
-			stdnt[j] = new Student(templines[i]);
-			if(studentExist(stdnt, stdnt[j])) {
+			stdnt.add(j, new Student(templines[i]));
+			if(studentExist(stdnt, stdnt.get(j))) {
 				continue;
 			}
 			j++;
@@ -73,14 +76,15 @@ public class HGUCoursePatternAnalyzer {
 		
 		return stdnt;
 	}
-
+	*/
 	/**
 	 * This method check if there is the same name of the second argument in the array, students
 	 * @param students
 	 * @param student
 	 * @return boolean
 	 */
-	private boolean studentExist(Student[] students, Student student) {
+	/*
+	private boolean studentExist(ArrayList<Student> students, Student student) {
 		
 		int cnt = 0;
 		
@@ -99,15 +103,41 @@ public class HGUCoursePatternAnalyzer {
 			return false;
 		}
 	}
+	*/
+	private ArrayList<Student> initiateStudentArrayFromLines(String[] lines) {
+		
+		ArrayList<Student> students = new ArrayList<Student>(numOfStudents);
+		
+		int count = 0;
+		for(String line:lines) {
+			String studentName = line.split(",")[1].trim();
+			Student newStudent = new Student(studentName);
+			if(!studentExist(students,newStudent))
+				students.add(count++, newStudent);
+		}
+		
+		return students;
+	}
 	
+	private boolean studentExist(ArrayList<Student> students, Student student) {
+		
+		for(Student aStudent:students) {
+			if(aStudent != null && aStudent.getName().equals(student.getName()))
+				return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * This method returns a Course array to initiate the field, courses, from lines.
 	 * @param lines
 	 * @return
 	 */
-	private Course[] initiateCourseArrayFromLines(String[] lines) {
+	/*
+	private ArrayList<Course> initiateCourseArrayFromLines(String[] lines) {
 		
-		Course[] crs = new Course[numOfCourses];
+		ArrayList<Course> crs = new ArrayList<Course>(numOfCourses);
 		String[] templines = new String[lines.length];
 		
 		for(int i = 0; i < lines.length; i++) {
@@ -116,8 +146,8 @@ public class HGUCoursePatternAnalyzer {
         }
 		
 		for(int i = 0, j = 0; j < numOfCourses; i++) {
-			crs[j] = new Course(templines[i]);
-			if(courseExist(crs, crs[j])) {
+			crs.add(j, new Course(templines[i]));
+			if(courseExist(crs, crs.get(j))) {
 				continue;
 			}
 			j++;
@@ -125,14 +155,16 @@ public class HGUCoursePatternAnalyzer {
 		
 		return crs;
 	}
-
+	*/
+	
 	/**
 	 * This method check if there is the same name of the second argument in the array, courses.
 	 * @param courses
 	 * @param course
 	 * @return boolean
 	 */
-	private boolean courseExist(Course[] courses, Course course) {
+	/*
+	private boolean courseExist(ArrayList<Course> courses, Course course) {
 		
 		int cnt = 0;
 		
@@ -151,5 +183,30 @@ public class HGUCoursePatternAnalyzer {
 			return false;
 		}
 	}
+	*/
+	
+	private ArrayList<Course> initiateCourseArrayFromLines(String[] lines) {
+		
+		ArrayList<Course> courses = new ArrayList<Course>(numOfCourses);
+		
+		int count = 0;
+		for(String line:lines) {
+			String courseName = line.split(",")[2].trim();
+			Course newCourse = new Course(courseName);
+			if(!courseExist(courses,newCourse))
+				courses.add(count++, newCourse);
+		}
+		
+		return courses;
+	}
+	
+	private boolean courseExist(ArrayList<Course> courses, Course course) {
+		
+		for(Course aCourse:courses) {
+			if(aCourse != null && aCourse.getCourseName().equals(course.getCourseName()))
+				return true;
+		}
 
+		return false;
+	}
 }
